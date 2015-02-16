@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://mysql40576-env-0369963.jelasticlw.com.br/aap?zeroDateTimeBehavior=convertToNull</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">tOOaTVbclb</property>
+        <property name="hibernate.show_sql">false</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.connection.autocommit">true</property>
+        <property name="hibernate.current_session_context_class">thread</property>       
+        <mapping class="wiki.models.Alteracao"/>
+        <mapping class="wiki.models.Article"/>
+        <mapping class="wiki.models.Category"/>
+        <mapping class="wiki.models.Historico"/>
+        <mapping class="wiki.models.User"/>
+    </session-factory>
+</hibernate-configuration>

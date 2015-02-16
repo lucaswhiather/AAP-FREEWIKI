@@ -1,0 +1,289 @@
+/* 
+    Created on : 17/08/2014, 16:13:42
+    Author     : RENAN
+*/
+
+::-moz-selection {
+    background: #51d494;
+    color: #fff;
+}
+
+::selection {
+    background: #51d494;
+    color: #fff;
+}
+
+
+@font-face {
+    font-family: 'main';
+    font-style: normal;
+    font-weight: normal;
+    src: url(../fonts/AdventPro-Light.ttf);
+}
+
+
+*, *::after, a::before {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+body, html {
+    min-width: 100%;
+    background: url(body.png) repeat;
+}
+
+/* Fonte diferente, para títulos, etc */
+.wf-font {
+    font-family: 'main', sans-serif;
+}
+
+.wf-url {
+    text-decoration: none;
+}
+
+/* Cor padrão de background */
+.wf-background {
+    background: #333;
+}
+
+/* Transição suave */
+.wf-fast-tran {
+    -webkit-transition: all 200ms ease-in;
+            transition: all 200ms ease-in;
+}
+
+.wf-slow-tran {
+    -webkit-transition: all 400ms ease-in;
+            transition: all 400ms ease-in;
+}
+
+.wf-header, .wf-content {
+    position: relative;
+}
+
+.wf-header {
+    width: 100%;
+    height: 45px;
+    box-shadow: 0 0 8px 2px #ccc;
+    z-index: 1;
+}
+
+.wf-header::after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
+.wf-logo,
+.wf-search-wrapper {
+    position: absolute;
+}
+
+.wf-logo {
+    display: block;
+    left: 10%;
+    line-height: 45px; /* tamanho do header */
+    color: #fff;
+    text-shadow: 0 0 10px #ccc;
+    font-size: 2em;
+}
+
+.wf-logo:hover {
+    text-shadow: 0 0 15px #fff;
+}
+
+
+.wf-search-wrapper {
+    line-height: 45px;
+    padding: 0 10px;
+    width: 400px;
+    left: 35%;
+    text-align: center;
+}
+
+.input-search {
+    font-size: 1em;
+    font-family: sans-serif;
+    width: 80%;
+}
+
+.input-search:focus {
+    box-shadow: 0 0 8px #51d494;
+    border-color: #4cb281;
+}
+
+.btn-search {
+    width: 15%;
+    padding: 7.5px;
+    border: 0 none;
+    background: #51d494;
+    border-radius: 3px;
+    cursor: pointer;
+    overflow: hidden;
+    text-indent: -999px;
+}
+
+.btn-menu:hover,
+.btn-search:hover {
+   background: #4cb281;
+}
+
+.input {
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+.wf-content {
+    width: 90%;
+    left: 5%;
+    min-height: 620px;
+    padding: 10px 0;
+    box-shadow: 0 10px 10px 2px #ccc;
+    background: #fff;
+}
+
+.wf-art-edit {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+.wf-art-info {
+    width: 90%;
+    margin-left: 5%;
+    padding: 8px 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.wf-art-info > h2 {
+    font-family: main;
+    color: #333;
+}
+
+.wf-art-name {
+    font-size: .8em;
+    color: #51d494;
+}
+
+.wf-art-info h4 {
+    display: block;
+    width: 100%;
+    color: #555;
+    font-family: sans-serif;
+    margin: 1.5px 0;
+    font-size: .8em;
+}
+
+.wf-art {
+    margin-left: 5%;
+    width: 90%;
+    padding: 10px;
+}
+
+.wf-art input,
+.wf-art textarea{
+    margin: 2px 0;
+}
+
+.wf-art input[type='text'],
+.wf-art textarea {
+    font-family: sans-serif;
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+}
+
+.wf-art input[type='text'] {
+    font-size: 1.2em;
+}
+
+.wf-art textarea {
+    max-width: 100%;
+    min-width: 100%;
+    height: 320px;
+}
+
+.btn-send-edit {
+    padding: 6px 16px;
+    background: #51d494;
+    color: #fff;
+    border-radius: 2px;
+    border: 0 none;
+    font-size: 1em;
+    text-shadow: 0 0 4px #333;
+    border-bottom: 4px solid #4cb281;
+    cursor: pointer;
+}
+
+.btn-send-edit:hover {
+    background: #4cb281;
+}
+
+.wf-footer-info{
+    display: block;
+    border-top: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+    padding: 10px 0;
+    width: 100%;
+    color: #555;
+    text-align: center;
+}
+
+.btn-menu {
+    position: absolute;
+    right: 5%;
+    top: 5px;
+    width: 36px;
+    height: 36px;
+    background: #51d494;
+    border-radius: 2px;
+    text-align: center;
+    display: none;
+}
+
+
+.btn-menu b {
+    width: 80%;
+    height: 10px;
+    background: #fff;
+}
+
+
+
+
+@media only screen and (max-width: 480px){
+    .wf-content {
+        width: 100%;
+        left: 0;
+        box-shadow: none;
+    }
+    
+    .wf-art-edit {
+        width: 100%;
+    }
+    
+    .wf-art-info > h2 {
+        font-size: 1em;
+    }
+    
+    .wf-logo {
+        left: 2%;
+    }
+    
+    .wf-search-wrapper {
+        left: 30%;
+        width: 220px;
+    }
+    
+    .btn-menu {
+        display: block;
+    }
+    
+    .btn-search:hover {
+        border-left-width: 12px;
+    }
+}
+
+

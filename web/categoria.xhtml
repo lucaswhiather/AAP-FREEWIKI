@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="template/template.xhtml">
+
+        <ui:define name="conteudo">
+            <h:form id="formListaCategoria" style="width: 85%;">               
+                <p:growl/>
+                <p:commandButton value="Nova categoria"  icon="ui-icon-plus" actionListener="#{categoryBean.novoCadastro()}" oncomplete="PF('dlgCadastroCategoria').show()" update=":dlgCadastroCategoria"/>
+                <p:separator/>
+
+                <p:dataTable var="category" value="#{categoryBean.listarTodos()}" paginator="true" rows="10" paginatorPosition="top">
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{category.name}"/>
+                    </p:column>
+                    <p:column  headerText="Opções">
+                        <p:commandButton title="Alterar" update=":dlgCadastroCategoria" icon="ui-icon-pencil" actionListener="#{categoryBean.alterar(category)}" oncomplete="PF('dlgCadastroCategoria').show()"/>
+                        <p:commandButton title="Excluir" update="@form" icon="ui-icon-trash" actionListener="#{categoryBean.excluir(category)}" >
+                            <p:confirm header="Confirmação" message="Deseja excluir essa categoria?" icon="ui-icon-alert" />  
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable> 
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">  
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" style="margin-left: 7%"/>  
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" style="float: right;"/>       
+                </p:confirmDialog> 
+
+            </h:form>
+
+
+            <p:dialog id="dlgCadastroCategoria" widgetVar="dlgCadastroCategoria" header="#{categoryBean.category.id==null?'Inserindo ':'Alterando '} Categoria" modal="true" resizable="false" closable="false">
+
+                <h:form id="formCadastroCategoria" style="margin-left: -0.1%">
+                    <p:growl/>
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="nome" value="Nome: "/>
+                        <p:inputText id="nome" value="#{categoryBean.category.name}" required="true" maxlength="15"/>
+
+                        <p:commandButton value="Salvar"  icon="ui-icon-disk" actionListener="#{categoryBean.salvar()}" update="@form, :formListaCategoria"/>
+                        <p:commandButton value="Cancelar"  icon="ui-icon-cancel" oncomplete="PF('dlgCadastroCategoria').hide();" process="@this">
+                            <p:resetInput target=":dlgCadastroCategoria"/>
+                        </p:commandButton>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

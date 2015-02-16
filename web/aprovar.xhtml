@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="template/template.xhtml">
+        <ui:define name="conteudo">
+
+            <h:form>
+                <p:growl/>
+
+                <p:dataTable var="article" value="#{articleBean.listarTodosAprovadoADM(false)}" paginator="true" rows="10" paginatorPosition="top" rendered="#{loginBean.user.type==2}" styleClass="tabela">
+                    <f:facet name="header">
+                        Artigos
+                    </f:facet>
+
+                    <p:column headerText="Título">
+                        <p:link outcome="artigo" value="#{article.title}">
+                            <f:param name="id" value="#{article.id}" />
+                        </p:link> 
+                    </p:column>
+                    <p:column headerText="Categoria">
+                        <h:outputText value="#{article.category.name}"/>
+                    </p:column>
+                    <p:column  headerText="Opções">
+                        <p:commandButton value="Aprovar" actionListener="#{articleBean.aprovarAdm(article)}" update="@form"/>
+                    </p:column>
+                </p:dataTable> 
+
+
+                <p:dataTable var="alteracao" value="#{alteracaoBean.listarAlteracaoDono()}" paginator="true" rows="10" paginatorPosition="top" styleClass="tabela">
+                    <f:facet name="header">
+                        Alterações Nos Meus Artigos
+                    </f:facet>
+
+                    <p:column headerText="Artigo">
+                        <h:outputText value="#{alteracao.artigo.title}"/>
+                    </p:column>
+                    <p:column headerText="Usuário">
+                        <h:outputText value="#{alteracao.usuario.name}"/>
+                    </p:column>
+                    <p:column  headerText="Opções">
+                        <p:commandButton title="Visualizar"  icon="ui-icon-search" actionListener="#{alteracaoBean.visualizar(alteracao)}" oncomplete="PF('dlgAlteracaoVisualizar').show()" update=":dlgAlteracaoVisualizar"/>
+
+                        <p:commandButton value="Aprovar" actionListener="#{alteracaoBean.aprovarDono(alteracao)}" update="@form"/>
+                    </p:column>
+                </p:dataTable> 
+
+
+                <p:dataTable var="alteracao" value="#{alteracaoBean.listarTodasAlteracao()}" paginator="true" rows="10" paginatorPosition="top" rendered="#{loginBean.user.type==2}" styleClass="tabela">
+                    <f:facet name="header">
+                        Todas Alterações
+                    </f:facet>
+
+                    <p:column headerText="Artigo">
+                        <h:outputText value="#{alteracao.artigo.title}"/>
+                    </p:column>
+                    <p:column headerText="Usuário">
+                        <h:outputText value="#{alteracao.usuario.name}"/>
+                    </p:column>
+                    <p:column  headerText="Opções">
+                        <p:commandButton title="Visualizar"  icon="ui-icon-search" actionListener="#{alteracaoBean.visualizar(alteracao)}" oncomplete="PF('dlgAlteracaoVisualizar').show()" update=":dlgAlteracaoVisualizar"/>
+                        <p:commandButton value="Aprovar" actionListener="#{alteracaoBean.aprovarAdm(alteracao)}" update="@form"/>
+                    </p:column>
+                </p:dataTable> 
+            </h:form>
+            <p:dialog id="dlgAlteracaoVisualizar" widgetVar="dlgAlteracaoVisualizar" header="Alteração" modal="true" resizable="false" closable="false">
+
+                <h:form rendered="#{alteracaoBean.alteracao!=null}">
+                    <h:outputText value="#{alteracaoBean.alteracao.conteudo}" escape="false"/>
+                    <br/>
+                    <p:commandButton value="Fechar"  icon="ui-icon-cancel" oncomplete="PF('dlgAlteracaoVisualizar').hide();" process="@this" style="margin-top: 15px;"/>
+
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

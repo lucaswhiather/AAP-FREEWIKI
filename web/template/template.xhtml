@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>FreeWiki</title>
+        <link rel="shortcut icon" href="content/img/wikipedia.ico" />
+        <link rel='stylesheet' href='content/css/default.css'/>
+        <link rel='stylesheet' href='content/css/layout.css'/>
+    </h:head>
+    <h:body>
+        <header class='wf-header wf-background'>
+            <a class='wf-font wf-logo wf-url wf-slow-tran' href="index.xhtml">FreeWiki</a>
+            <h:form>
+                <p:commandLink actionListener="#{userBean.novoCadastro()}" rendered="#{loginBean.user==null}" oncomplete="PF('dlgCadastrar').show();" styleClass="wf-font wf-logo wf-cad_log wf-url wf-slow-tran">
+                    <h:outputText value="Cadastrar" style="float: right"/>
+                </p:commandLink>
+                <p:commandLink rendered="#{loginBean.user==null}" oncomplete="PF('dlgLogin').show();" styleClass="wf-font wf-logo wf-cad_log wf-url wf-slow-tran">
+                    <h:outputText value="Login" style="float: right"/>
+                </p:commandLink>
+                <p:commandLink action="#{loginBean.sair()}" rendered="#{loginBean.user!=null}" styleClass="wf-font wf-logo wf-cad_log_01 wf-url" ajax="false" style="float: right; margin-right: 1%">
+                    <h:outputText value="Sair"/>
+                </p:commandLink>
+                <h:outputText value="Olá, #{loginBean.user.name} -" rendered="#{loginBean.user!=null}" styleClass="wf-font wf-logo wf-cad_log wf-url wf-slow-tran" style="float: right; margin-top: 0.1%; margin-right: 0.5%"/>
+            </h:form>
+        </header>
+
+        <nav>
+                <form method="GET" action="artigo.xhtml" style="height: 80px; margin-top: 20px;">
+                    <input type="text" name="busca" value="" style="height: 26px; width: auto; margin-left: 12%; margin-top: 4%"/>
+                    <br/>
+                    <input type="submit" value="Buscar" style="margin-left: 24%; margin-top: 1%; width: 50%; font-weight: bolder"/>
+                </form>
+  
+
+            <h:form>
+
+
+                <p:menu>
+
+                    <p:submenu label="Artigo">
+                        <p:menuitem value="Meus Artigos" outcome="cadastrarArtigo" rendered="#{loginBean.user!=null}"/>
+                        <p:menuitem value="Aprovar"  outcome="aprovar" rendered="#{loginBean.user!=null}"/>
+                        <p:menuitem value="Todos Artigos" outcome="artigo"/>
+                    </p:submenu>
+                    <p:submenu label="Categorias">
+                        <p:menuitem value="Cadastrar Categoria" rendered="#{loginBean.user!=null}" outcome="categoria"/>
+                        <c:forEach var="category" items="#{categoryBean.listarTodos()}">
+                            <p:menuitem value="#{category.name}" outcome="artigo">  
+                                <f:param name="cat" value="#{category.id}" />
+                            </p:menuitem>
+                        </c:forEach>
+                    </p:submenu>
+                    <p:submenu label="Top Artigos">
+                        <c:forEach var="artigo" items="#{articleBean.listarTop()}">
+                            <p:menuitem value="#{artigo.title}" outcome="artigo">  
+                                <f:param name="id" value="#{artigo.id}" />
+                            </p:menuitem>
+                        </c:forEach>
+                    </p:submenu>
+                </p:menu>
+            </h:form>
+        </nav>
+
+        <section>
+            <ui:insert name="conteudo"></ui:insert>
+        </section>
+        <footer>
+            AAP - FREE WIKI:<br/>
+            Lucas Whiather Abrão de Souza<br/>
+            Eduardo Augusto Máximo de Carvalho
+                
+        </footer>
+
+
+        <p:dialog id="dlgCadastrar" widgetVar="dlgCadastrar" header="Cadastro" resizable="false" modal="true">
+            <h:form>
+                <p:growl/>
+                <p:panelGrid columns="2" style="margin-left: -11%">
+                    <p:outputLabel for="nome" value="Nome: "/>
+                    <p:inputText id="nome" value="#{userBean.user.name}" maxlength="30" required="true"/>
+
+                    <p:outputLabel for="email" value="Email: "/>
+                    <p:inputText id="email" value="#{userBean.user.email}" maxlength="30" required="true"/>
+
+                    <p:outputLabel for="senha" value="Senha: "/>
+                    <p:password id="senha" value="#{userBean.user.password}" maxlength="30" required="true"/>    
+
+                    <p:outputLabel for="confirmarSenha" value="Confirmar senha: "/>
+                    <p:password id="confirmarSenha" value="#{userBean.confirmar}" maxlength="30" required="true"/>     
+                </p:panelGrid>
+
+                <p:commandButton value="Cadastrar" actionListener="#{userBean.salvar()}" update="@form" style="margin-top: 2%; margin-left: 21.9%; width: 50%"/>
+            </h:form>
+
+        </p:dialog>
+
+        <p:dialog id="dlgLogin" widgetVar="dlgLogin" header="Login" resizable="false" modal="true">
+            <h:form>
+                <p:growl/>
+                <p:panelGrid columns="2" style="margin-left: -11%">     
+                    <p:outputLabel for="email" value="Email: "/>
+                    <p:inputText id="email" value="#{loginBean.email}" maxlength="30" required="true"/>
+
+                    <p:outputLabel for="senha" value="Senha: " style="margin-right: 0.9px"/>
+                    <p:password id="senha" value="#{loginBean.senha}" maxlength="30" required="true"/>    
+                </p:panelGrid>
+
+                <p:commandButton value="Logar" action="#{loginBean.logar()}" update="@form" style="margin-top: 2%; margin-left: 21.9%; width: 50%"/>
+            </h:form>
+
+        </p:dialog>
+
+    </h:body>
+</html>
+

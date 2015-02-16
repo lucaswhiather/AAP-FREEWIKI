@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition template="template/template.xhtml">
+        <ui:define name="conteudo">
+
+            <h:form id="formListaArtigo" style="width: 85%;">               
+                <p:growl/>
+                <p:commandButton value="Novo artigo"  icon="ui-icon-plus" actionListener="#{articleBean.novoCadastro()}" oncomplete="PF('dlgCadastroArtigo').show()" update=":dlgCadastroArtigo"/>
+
+                <p:dataTable var="article" value="#{articleBean.listarTodosUsuario()}" paginator="true" rows="10" paginatorPosition="top" styleClass="tabela">
+                    <p:column headerText="Título">
+                        <p:link outcome="artigo" value="#{article.title}">
+                            <f:param name="id" value="#{article.id}" />
+                        </p:link> 
+                    </p:column>
+                    <p:column headerText="Categoria" styleClass=".tabelaCategoria">
+                        <h:outputText value="#{article.category.name}"/>
+                    </p:column>
+                    <p:column  headerText="Opções" styleClass="tabelaOpcoes">
+                        <p:commandButton title="Alterar" update=":dlgCadastroArtigo" icon="ui-icon-pencil" actionListener="#{articleBean.alterar(article)}" oncomplete="PF('dlgCadastroArtigo').show()"/>
+                        <p:commandButton title="Excluir" update="@form" icon="ui-icon-trash" actionListener="#{articleBean.excluir(article)}" >
+                            <p:confirm header="Confirmação" message="Deseja excluir esse artigo?" icon="ui-icon-alert" />  
+                        </p:commandButton>
+                        <p:commandButton value="Aprovar" title="Aprovar" actionListener="#{articleBean.aprovar(article)}" update="@form" rendered="#{!article.userApproved}"/>
+                    </p:column>
+                </p:dataTable> 
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">  
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+                </p:confirmDialog> 
+
+            </h:form>
+            <p:dialog id="dlgCadastroArtigo" widgetVar="dlgCadastroArtigo" header="#{articleBean.article.id==null?'Inserindo ':'Alterando '} Artigo" modal="true" resizable="false" closable="false">
+
+                <h:form rendered="#{articleBean.article!=null}" style="margin-left: -0.1%;">
+                    <p:growl/>
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="titulo" value="Titulo: "/>
+                        <p:inputText id="titulo" value="#{articleBean.article.title}" maxlength="30" required="true"/>
+
+                        <p:outputLabel for="categoria" value="Categoria: "/>
+                        <p:selectOneMenu id="categoria" value="#{articleBean.article.category}">  
+                            <f:selectItem itemLabel="Selecione" itemValue="#{null}"/>
+                            <f:selectItems value="#{categoryBean.listarTodos()}" var="category" itemLabel="#{category.name}" itemValue="#{category}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:editor id="editor" value="#{articleBean.article.content}" width="600" required="true"/><br/>
+                    <p:commandButton value="Salvar"  icon="ui-icon-disk" actionListener="#{articleBean.salvar()}" update="@form, :formListaArtigo"/>
+                    <p:commandButton value="Cancelar"  icon="ui-icon-cancel" oncomplete="PF('dlgCadastroArtigo').hide();" process="@this">
+                        <p:resetInput target=":dlgCadastroArtigo"/>
+                    </p:commandButton>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

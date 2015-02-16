@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="template/template.xhtml">
+        <ui:define name="conteudo">
+
+            <f:metadata>
+                <f:viewParam name="id" value="#{articleBean.id}"/>
+                <f:viewParam name="cat" value="#{articleBean.cat}"/>
+                <f:viewParam name="busca" value="#{articleBean.busca}"/>
+            </f:metadata>
+
+            <f:event listener="#{articleBean.carregar()}" type="preRenderView" />
+
+            <h:form rendered="#{articleBean.id==null}" style="width: 85%">
+                <p:dataTable var="article" value="#{articleBean.listarTodos()}">
+                    <p:column headerText="Título">
+                        <p:link outcome="artigo" value="#{article.title}">
+                            <f:param name="id" value="#{article.id}" />
+                        </p:link> 
+                    </p:column>
+
+                    <p:column headerText="Categoria">
+                        <h:outputText value="#{article.category.name}"/>
+                    </p:column>
+
+                    <p:column headerText="Usuário">
+                        <h:outputText value="#{article.user.name}"/>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <h:form rendered="#{articleBean.id!=null}">
+                <p:growl id="growl"/>
+
+                <h1 style="text-align: center">#{articleBean.article.title}</h1>
+                <p:separator styleClass="barraConteudo"/>
+                <h:outputText value="#{articleBean.article.content}" escape="false"/>
+
+                 <p:separator styleClass="barraConteudo" />
+                
+                <ui:repeat value="#{alteracaoBean.listarTodas(articleBean.article)}" var="alteracao">
+                    <h:outputText value="#{alteracao.conteudo}" escape="false"/>
+                    <p:separator styleClass="barraConteudo"/>
+                </ui:repeat>
+
+               
+                <h:outputText value="Este Artigo foi: "/>
+                <p:commandButton value="Util" update="pie, growl" actionListener="#{articleBean.foiUtil(true)}"/>
+                <p:commandButton value="Inutil" update="pie, growl" actionListener="#{articleBean.foiUtil(false)}"/>
+                <p:commandButton value="Propor Alterações" rendered="#{loginBean.user!=null and !loginBean.user.equals(articleBean.article.user)}" actionListener="#{alteracaoBean.novaAlteracao(articleBean.article)}" oncomplete="PF('dlgProporAlteracao').show()" update=":dlgProporAlteracao"/>
+                <p:commandButton value="Visualizar histórico" oncomplete="PF('dlgHistorico').show()" />
+                <p:chart id="pie" type="pie" model="#{articleBean.util()}" style="width:220px;height:130px" />
+            </h:form>
+
+            <p:dialog id="dlgHistorico" widgetVar="dlgHistorico" header="Histórico" modal="true" resizable="false" closable="false" height="auto">
+
+                <h:form rendered="#{articleBean.article!=null}" style="width: 100%; margin-left: -0.1%; height: 130px; margin-top: 1.3%">
+                    <p:dataTable value="#{historicoBean.listarTodos(articleBean.article)}" var="historico">
+                        <p:column headerText="Data">
+                            <h:outputText value="#{historico.data}">
+                                <f:convertDateTime pattern="dd/MM/YYYY hh:mm" timeZone="GMT-3"/>
+                            </h:outputText>
+
+                        </p:column>
+                        <p:column headerText="Usuário">
+                            <h:outputText value="#{historico.usuario.name}"/>
+                        </p:column>
+                        <p:column headerText="Ação">
+                            <h:outputText value="#{historico.acao}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="Fechar"  icon="ui-icon-cancel" oncomplete="PF('dlgHistorico').hide();" process="@this" style="margin-top: 15px;"/>
+
+                </h:form>
+            </p:dialog>
+
+            <p:dialog id="dlgProporAlteracao" widgetVar="dlgProporAlteracao" header="Alteração" modal="true" resizable="false" closable="false">
+
+                <h:form rendered="#{alteracaoBean.alteracao!=null}">
+                    <p:growl/>
+                    <p:editor id="editor" value="#{alteracaoBean.alteracao.conteudo}" width="600" required="true"/><br/>
+                    <p:commandButton value="Salvar"  icon="ui-icon-disk" actionListener="#{alteracaoBean.salvar()}" update="@form"/>
+                    <p:commandButton value="Cancelar"  icon="ui-icon-cancel" oncomplete="PF('dlgProporAlteracao').hide();" process="@this">
+                        <p:resetInput target=":dlgProporAlteracao"/>
+                    </p:commandButton>
+                </h:form>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</html>
+
